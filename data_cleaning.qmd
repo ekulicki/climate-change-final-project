@@ -1,0 +1,25 @@
+---
+title: "Data Cleaning"
+format: html
+---
+
+
+# Loading the Datasets
+
+```{python}
+
+import pandas as pd
+import numpy as np
+climate_data = pd.read_csv("data/POWER_climate_data_Puerto_Rico_1986_2024.csv")
+disease_data = pd.read_csv("data/weekly_data_dengue_epidemic_alert_thresholds_1986_June2024.csv")
+
+
+climate_data.head()
+```
+
+
+# Cleaning Climate Data
+
+# Cleaning Disease Data
+
+# Merging Datasets

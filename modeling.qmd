@@ -1,0 +1,23 @@
+---
+title: "Modeling"
+format: html
+---
+
+# Loading Data and Packages
+
+# Supervised Learning
+
+## Linear Regression
+
+## Random Forest
+
+## XGBoost
+
+## Long Short-Term Memory (LSTM) Neural Network
+
+
+# Unsupervised Learning
+
+## K-Means Clustering
+
+## PCA Visualization
