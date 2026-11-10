@@ -1,6 +1,8 @@
 ---
 title: "EDA"
 format: html
+jupyter: dengue
+
 ---
 
 # Loading Data and Packages
@@ -17,8 +19,6 @@ import seaborn as sns
 full_df = pd.read_csv("data/full_df.csv")
 
 ```
-
-# EDA
 
 ```{python}
 

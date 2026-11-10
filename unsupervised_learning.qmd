@@ -1,6 +1,8 @@
 ---
 title: "Unsupervised Learning"
 format: html
+jupyter: dengue
+
 ---
 
 # Loading Data and Packages

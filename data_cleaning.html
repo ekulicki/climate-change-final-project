@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Data Cleaning</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -61,15 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="data_cleaning_files/libs/clipboard/clipboard.min.js"></script>
 <script src="data_cleaning_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="data_cleaning_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="data_cleaning_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="data_cleaning_files/libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="data_cleaning_files/libs/quarto-html/popper.min.js"></script>
 <script src="data_cleaning_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="data_cleaning_files/libs/quarto-html/anchor.min.js"></script>
 <link href="data_cleaning_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="data_cleaning_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="data_cleaning_files/libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="data_cleaning_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="data_cleaning_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="data_cleaning_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="data_cleaning_files/libs/bootstrap/bootstrap-7a1ba01e1618e08d8f307002997fc2d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -77,11 +83,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="fullcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -104,15 +110,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="loading-the-datasets" class="level1">
 <h1>Loading the Datasets</h1>
-<div id="1fcc9d80" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>climate_data <span class="op">=</span> pd.read_csv(<span class="st">"data/POWER_climate_data_Puerto_Rico_1986_2024.csv"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>disease_data <span class="op">=</span> pd.read_csv(<span class="st">"data/weekly_data_dengue_epidemic_alert_thresholds_1986_June2024.csv"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>climate_data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div id="5e9cedfd" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Climate data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>climate_df <span class="op">=</span> pd.read_csv(<span class="st">"data/POWER_climate_data_Puerto_Rico_1986_2024.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>disease_df <span class="op">=</span> pd.read_csv(<span class="st">"data/weekly_data_dengue_epidemic_alert_thresholds_1986_June2024.csv"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>climate_df.head()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>disease_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
 
@@ -120,65 +129,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">-BEGIN HEADER-</th>
-<th data-quarto-table-cell-role="th">Unnamed: 1</th>
-<th data-quarto-table-cell-role="th">Unnamed: 2</th>
-<th data-quarto-table-cell-role="th">Unnamed: 3</th>
-<th data-quarto-table-cell-role="th">Unnamed: 4</th>
-<th data-quarto-table-cell-role="th">Unnamed: 5</th>
-<th data-quarto-table-cell-role="th">Unnamed: 6</th>
+<th data-quarto-table-cell-role="th">conf_cases</th>
+<th data-quarto-table-cell-role="th">weekdate</th>
+<th data-quarto-table-cell-role="th">week</th>
+<th data-quarto-table-cell-role="th">year</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>NASA/POWER Source Native Resolution Daily Data</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>0.0</td>
+<td>1986-01-01</td>
+<td>1</td>
+<td>1986</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>Dates (month/day/year): 01/01/1986 through 06/...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>1.0</td>
+<td>1986-01-08</td>
+<td>2</td>
+<td>1986</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>Location: latitude 18.22 longitude -66.59</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>1.0</td>
+<td>1986-01-15</td>
+<td>3</td>
+<td>1986</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
-<td>elevation from MERRA-2: Average for 0.5 x 0.62...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>0.0</td>
+<td>1986-01-22</td>
+<td>4</td>
+<td>1986</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
-<td>The value for missing source data that cannot ...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>0.0</td>
+<td>1986-01-29</td>
+<td>5</td>
+<td>1986</td>
 </tr>
 </tbody>
 </table>
@@ -187,14 +178,406 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="cleaning-climate-data" class="level1">
-<h1>Cleaning Climate Data</h1>
+<section id="cleaning" class="level1">
+<h1>Cleaning</h1>
+<div id="ab932ad9" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert climate YEAR and DOY into dates</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>climate_df[<span class="st">"date"</span>] <span class="op">=</span> (</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    pd.to_datetime(climate_df[<span class="st">"YEAR"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"-01-01"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> pd.to_timedelta(climate_df[<span class="st">"DOY"</span>] <span class="op">-</span> <span class="dv">1</span>, unit<span class="op">=</span><span class="st">"D"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert dengue dates</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>disease_df[<span class="st">"weekdate"</span>] <span class="op">=</span> pd.to_datetime(disease_df[<span class="st">"weekdate"</span>])</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort both datasets</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>climate_df <span class="op">=</span> climate_df.sort_values(<span class="st">"date"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>disease_df <span class="op">=</span> disease_df.sort_values(<span class="st">"weekdate"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace NASA missing values</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"T2M"</span>, <span class="st">"T2M_MAX"</span>, <span class="st">"T2M_MIN"</span>, <span class="st">"PRECTOTCORR"</span>, <span class="st">"RH2M"</span>]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>climate_df[cols] <span class="op">=</span> climate_df[cols].replace(<span class="op">-</span><span class="dv">999</span>, np.nan)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>climate_aligned <span class="op">=</span> pd.merge_asof(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    climate_df,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    disease_df[[<span class="st">"weekdate"</span>]],</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">"date"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span><span class="st">"weekdate"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    direction<span class="op">=</span><span class="st">"backward"</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>climate_weekly <span class="op">=</span> (</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    climate_aligned</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"weekdate"</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        temp_avg<span class="op">=</span>(<span class="st">"T2M"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        temp_max<span class="op">=</span>(<span class="st">"T2M_MAX"</span>, <span class="st">"max"</span>),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        temp_min<span class="op">=</span>(<span class="st">"T2M_MIN"</span>, <span class="st">"min"</span>),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        precip_total<span class="op">=</span>(<span class="st">"PRECTOTCORR"</span>, <span class="kw">lambda</span> x: x.<span class="bu">sum</span>(min_count<span class="op">=</span><span class="dv">1</span>)),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        humidity_avg<span class="op">=</span>(<span class="st">"RH2M"</span>, <span class="st">"mean"</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>climate_weekly.isna().<span class="bu">sum</span>()</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>climate_weekly.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">weekdate</th>
+<th data-quarto-table-cell-role="th">temp_avg</th>
+<th data-quarto-table-cell-role="th">temp_max</th>
+<th data-quarto-table-cell-role="th">temp_min</th>
+<th data-quarto-table-cell-role="th">precip_total</th>
+<th data-quarto-table-cell-role="th">humidity_avg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1986-01-01</td>
+<td>23.562857</td>
+<td>26.94</td>
+<td>21.56</td>
+<td>7.20</td>
+<td>80.501429</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1986-01-08</td>
+<td>23.475714</td>
+<td>26.62</td>
+<td>21.20</td>
+<td>20.76</td>
+<td>80.862857</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1986-01-15</td>
+<td>23.344286</td>
+<td>26.51</td>
+<td>20.92</td>
+<td>13.56</td>
+<td>79.211429</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>1986-01-22</td>
+<td>23.412857</td>
+<td>26.94</td>
+<td>20.38</td>
+<td>3.89</td>
+<td>75.744286</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>1986-01-29</td>
+<td>23.582857</td>
+<td>26.98</td>
+<td>20.97</td>
+<td>17.55</td>
+<td>77.205714</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
-<section id="cleaning-disease-data" class="level1">
-<h1>Cleaning Disease Data</h1>
+<section id="merge-datasets" class="level1">
+<h1>Merge datasets</h1>
+<div id="29cdb517" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>full_df <span class="op">=</span> disease_df.merge(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    climate_weekly,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    on<span class="op">=</span><span class="st">"weekdate"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    validate<span class="op">=</span><span class="st">"one_to_one"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>full_df <span class="op">=</span> full_df.sort_values(<span class="st">"weekdate"</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>full_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">conf_cases</th>
+<th data-quarto-table-cell-role="th">weekdate</th>
+<th data-quarto-table-cell-role="th">week</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">temp_avg</th>
+<th data-quarto-table-cell-role="th">temp_max</th>
+<th data-quarto-table-cell-role="th">temp_min</th>
+<th data-quarto-table-cell-role="th">precip_total</th>
+<th data-quarto-table-cell-role="th">humidity_avg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0.0</td>
+<td>1986-01-01</td>
+<td>1</td>
+<td>1986</td>
+<td>23.562857</td>
+<td>26.94</td>
+<td>21.56</td>
+<td>7.20</td>
+<td>80.501429</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1.0</td>
+<td>1986-01-08</td>
+<td>2</td>
+<td>1986</td>
+<td>23.475714</td>
+<td>26.62</td>
+<td>21.20</td>
+<td>20.76</td>
+<td>80.862857</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1.0</td>
+<td>1986-01-15</td>
+<td>3</td>
+<td>1986</td>
+<td>23.344286</td>
+<td>26.51</td>
+<td>20.92</td>
+<td>13.56</td>
+<td>79.211429</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>0.0</td>
+<td>1986-01-22</td>
+<td>4</td>
+<td>1986</td>
+<td>23.412857</td>
+<td>26.94</td>
+<td>20.38</td>
+<td>3.89</td>
+<td>75.744286</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>0.0</td>
+<td>1986-01-29</td>
+<td>5</td>
+<td>1986</td>
+<td>23.582857</td>
+<td>26.98</td>
+<td>20.97</td>
+<td>17.55</td>
+<td>77.205714</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
-<section id="merging-datasets" class="level1">
-<h1>Merging Datasets</h1>
+<section id="create-lags-then-remove-2024-data-and-check-for-remaining-na-values" class="level1">
+<h1>Create lags, then remove 2024 data and check for remaining NA values</h1>
+<div id="e0db4f13" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lag <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>]:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    full_df[<span class="ss">f"cases_</span><span class="sc">{</span>lag<span class="sc">}</span><span class="ss">wk_later"</span>] <span class="op">=</span> full_df[<span class="st">"conf_cases"</span>].shift(<span class="op">-</span>lag)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>full_df <span class="op">=</span> full_df[full_df[<span class="st">"year"</span>] <span class="op">&lt;</span> <span class="dv">2024</span>].reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>full_df.isna().<span class="bu">sum</span>()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>full_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">conf_cases</th>
+<th data-quarto-table-cell-role="th">weekdate</th>
+<th data-quarto-table-cell-role="th">week</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">temp_avg</th>
+<th data-quarto-table-cell-role="th">temp_max</th>
+<th data-quarto-table-cell-role="th">temp_min</th>
+<th data-quarto-table-cell-role="th">precip_total</th>
+<th data-quarto-table-cell-role="th">humidity_avg</th>
+<th data-quarto-table-cell-role="th">cases_1wk_later</th>
+<th data-quarto-table-cell-role="th">cases_2wk_later</th>
+<th data-quarto-table-cell-role="th">cases_4wk_later</th>
+<th data-quarto-table-cell-role="th">cases_8wk_later</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0.0</td>
+<td>1986-01-01</td>
+<td>1</td>
+<td>1986</td>
+<td>23.562857</td>
+<td>26.94</td>
+<td>21.56</td>
+<td>7.20</td>
+<td>80.501429</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1.0</td>
+<td>1986-01-08</td>
+<td>2</td>
+<td>1986</td>
+<td>23.475714</td>
+<td>26.62</td>
+<td>21.20</td>
+<td>20.76</td>
+<td>80.862857</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1.0</td>
+<td>1986-01-15</td>
+<td>3</td>
+<td>1986</td>
+<td>23.344286</td>
+<td>26.51</td>
+<td>20.92</td>
+<td>13.56</td>
+<td>79.211429</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>0.0</td>
+<td>1986-01-22</td>
+<td>4</td>
+<td>1986</td>
+<td>23.412857</td>
+<td>26.94</td>
+<td>20.38</td>
+<td>3.89</td>
+<td>75.744286</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>0.0</td>
+<td>1986-01-29</td>
+<td>5</td>
+<td>1986</td>
+<td>23.582857</td>
+<td>26.98</td>
+<td>20.97</td>
+<td>17.55</td>
+<td>77.205714</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="quick-checks" class="level1">
+<h1>Quick checks</h1>
+<div id="83eacd95" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(full_df.shape)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(full_df.isna().<span class="bu">sum</span>())</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(full_df.tail(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(1976, 13)
+conf_cases         0
+weekdate           0
+week               0
+year               0
+temp_avg           0
+temp_max           0
+temp_min           0
+precip_total       0
+humidity_avg       0
+cases_1wk_later    0
+cases_2wk_later    0
+cases_4wk_later    0
+cases_8wk_later    0
+dtype: int64
+      conf_cases   weekdate  week  year   temp_avg  temp_max  temp_min  \
+1966        36.0 2023-10-22    43  2023  27.828571     31.97     25.65   
+1967        36.0 2023-10-29    44  2023  27.720000     30.84     25.32   
+1968        45.0 2023-11-05    45  2023  27.632857     31.21     25.40   
+1969        47.0 2023-11-12    46  2023  27.461429     30.52     24.81   
+1970        53.0 2023-11-19    47  2023  26.910000     30.25     24.59   
+1971        42.0 2023-11-26    48  2023  26.727143     30.24     23.94   
+1972        55.0 2023-12-03    49  2023  26.817143     30.49     23.89   
+1973        56.0 2023-12-10    50  2023  25.854286     29.44     23.57   
+1974        54.0 2023-12-17    51  2023  25.577143     29.31     23.30   
+1975        49.0 2023-12-24    52  2023  25.400000     29.17     22.18   
+
+      precip_total  humidity_avg  cases_1wk_later  cases_2wk_later  \
+1966         56.53     79.941429             36.0             45.0   
+1967         46.75     80.952857             45.0             47.0   
+1968         30.26     81.062857             47.0             53.0   
+1969         15.58     79.017143             53.0             42.0   
+1970         26.93     80.805714             42.0             55.0   
+1971          2.74     76.820000             55.0             56.0   
+1972          8.22     76.294286             56.0             54.0   
+1973         29.62     79.922857             54.0             49.0   
+1974         18.09     79.378571             49.0             40.0   
+1975          5.25     74.148750             40.0             49.0   
+
+      cases_4wk_later  cases_8wk_later  
+1966             53.0             54.0  
+1967             42.0             49.0  
+1968             55.0             40.0  
+1969             56.0             49.0  
+1970             54.0             48.0  
+1971             49.0             61.0  
+1972             40.0             61.0  
+1973             49.0             63.0  
+1974             48.0             57.0  
+1975             61.0             51.0  </code></pre>
+</div>
+</div>
+</section>
+<section id="save-df-as-csv-to-data-folder" class="level1">
+<h1>Save df as CSV to data/ folder</h1>
+<div id="50899546" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>full_df.to_csv(<span class="st">"data/full_df.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 
 </main>
@@ -277,7 +660,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -286,8 +670,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -301,6 +746,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -463,44 +909,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -598,6 +1054,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       }
     }
   });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
   </script>
 </div> <!-- /content -->
 

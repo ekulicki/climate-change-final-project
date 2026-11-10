@@ -1,6 +1,8 @@
 ---
 title: "Supervised Learning"
 format: html
+jupyter: dengue
+
 ---
 
 # Loading Data and Packages
@@ -25,10 +27,7 @@ full_df = full_df.sort_values("weekdate").reset_index(drop=True)
 
 
 
-# Supervised Learning
-
-
-## Set Up Hyperparameters
+# Set Up Hyperparameters
 ```{python}
 
 from sklearn.linear_model import LinearRegression
@@ -66,7 +65,7 @@ models = {
 ```
 
 
-## Train Models: Linear Regression, Random Forest, XGBoost
+# Train Models: Linear Regression, Random Forest, XGBoost
 ```{python}
 
 from sklearn.base import clone
@@ -126,7 +125,7 @@ results_df.round(3)
 
 
 
-## Long Short-Term Memory (LSTM) Neural Network
+# Long Short-Term Memory (LSTM) Neural Network
 
 
 ```{python}
@@ -167,7 +166,7 @@ def create_sequences(X, y, years, weeks, sequence_length):
 
 ```
 
-## Train LSTM Model
+# Train LSTM Model
 
 
 ```{python}
@@ -288,7 +287,7 @@ baseline_results_df.round(3)
 
 ```
 
-## Model Comparison
+# Model Comparison
 
 ```{python}
 
