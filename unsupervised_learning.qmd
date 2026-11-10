@@ -1,0 +1,198 @@
+---
+title: "Unsupervised Learning"
+format: html
+---
+
+# Loading Data and Packages
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.decomposition import PCA
+
+full_df = pd.read_csv(
+    "data/full_df.csv",
+    parse_dates=["weekdate"]
+)
+
+full_df = full_df.sort_values("weekdate").reset_index(drop=True)
+
+features = [
+    "temp_avg",
+    "temp_max",
+    "temp_min",
+    "precip_total",
+    "humidity_avg"
+]
+
+```
+
+# K-Means Clustering
+
+## Standardize Climate Variables
+
+```{python}
+scaler = StandardScaler()
+
+X_scaled = scaler.fit_transform(full_df[features])
+```
+
+## Determine Optimal Number of Clusters
+
+```{python}
+
+k_values = range(2, 11)
+inertias = []
+silhouette_scores = []
+
+for k in k_values:
+    kmeans = KMeans(
+        n_clusters=k,
+        random_state=42,
+        n_init=10
+    )
+
+    labels = kmeans.fit_predict(X_scaled)
+
+    inertias.append(kmeans.inertia_)
+    silhouette_scores.append(
+        silhouette_score(X_scaled, labels)
+    )
+
+# Plot elbow method and silhouette scores
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+axes[0].plot(k_values, inertias, marker="o")
+axes[0].set_xlabel("Number of Clusters (k)")
+axes[0].set_ylabel("Inertia")
+axes[0].set_title("Elbow Method")
+
+axes[1].plot(k_values, silhouette_scores, marker="o")
+axes[1].set_xlabel("Number of Clusters (k)")
+axes[1].set_ylabel("Silhouette Score")
+axes[1].set_title("Silhouette Analysis")
+
+plt.tight_layout()
+plt.show()
+
+
+```
+
+## Fit K-Means Model
+
+```{python}
+
+kmeans_final = KMeans(
+    n_clusters=2,
+    random_state=42,
+    n_init=10
+)
+
+full_df["cluster"] = kmeans_final.fit_predict(X_scaled)
+
+full_df["cluster"].value_counts().sort_index()
+
+```
+
+## Analyze Dengue Incidence by Cluster
+
+```{python}
+cluster_summary = full_df.groupby("cluster").agg(
+    weeks=("conf_cases", "count"),
+    mean_cases=("conf_cases", "mean"),
+    median_cases=("conf_cases", "median"),
+    max_cases=("conf_cases", "max"),
+    avg_temp=("temp_avg", "mean"),
+    avg_precip=("precip_total", "mean"),
+    avg_humidity=("humidity_avg", "mean")
+)
+
+cluster_summary.round(2)
+
+```
+
+# Principal Component Analysis (PCA)
+
+## PCA Visualization of Climate Clusters
+
+```{python}
+pca = PCA(n_components=2)
+
+X_pca = pca.fit_transform(X_scaled)
+
+full_df["PC1"] = X_pca[:, 0]
+full_df["PC2"] = X_pca[:, 1]
+
+print("Explained variance ratio:", pca.explained_variance_ratio_)
+print("Total variance explained:", pca.explained_variance_ratio_.sum())
+
+plt.figure(figsize=(10, 6))
+
+sns.scatterplot(
+    data=full_df,
+    x="PC1",
+    y="PC2",
+    hue="cluster",
+    palette="Set2",
+    alpha=0.6
+)
+
+plt.title("Climate Clusters Visualized Using PCA")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.legend(title="Cluster")
+
+plt.show()
+
+```
+
+## PCA Visualization of Dengue Incidence
+
+
+```{python}
+
+full_df["case_category"] = pd.cut(
+    full_df["conf_cases"],
+    bins=[-1, 10, 50, np.inf],
+    labels=["Low (0–10)", "Moderate (11–50)", "High (>50)"]
+)
+
+plt.figure(figsize=(10, 6))
+
+sns.scatterplot(
+    data=full_df,
+    x="PC1",
+    y="PC2",
+    hue="case_category",
+    palette="viridis",
+    alpha=0.6
+)
+
+plt.title("Climate PCA Colored by Dengue Incidence")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.legend(title="Weekly Cases")
+
+plt.show()
+
+```
+
+# How Much Each Climate Variable Contributes to Each PC
+
+```{python}
+
+loadings = pd.DataFrame(
+    pca.components_.T,
+    columns=["PC1", "PC2"],
+    index=features
+)
+
+loadings.round(3)
+
+```

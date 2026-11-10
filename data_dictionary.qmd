@@ -1,0 +1,25 @@
+
+
+# Info from the NASA POWER Data Source:
+
+NASA/POWER Source Native Resolution Daily Data 
+
+Dates (month/day/year): 01/01/1986 through 06/30/2024 in LST
+
+Location: latitude  18.22   longitude -66.59
+
+elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = 158.14 meters
+
+The value for missing source data that cannot be computed or is outside of the sources availability range: -999
+
+# Data Dictionary 
+
+conf_cases: number of confirmed cases per week
+weekdate: first day of the week being reported
+week: week of the year (1-52)
+year: year
+temp_avg: average weekly temperature measured at 2 meters (C)
+temp_max: maximum weekly temperature measured at 2 meters (C)
+temp_min: minimum weekly temperature measured at 2 meters (C)
+precip_total: total weekly precipitation (mm)
+humidity_avg: average weekly relative humidity at 2 meters (%)

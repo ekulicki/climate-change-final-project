@@ -1,0 +1,4 @@
+# Quarto-generated files
+*_files/
+*.html
+.quarto/git restore --staged data_cleaning_files/

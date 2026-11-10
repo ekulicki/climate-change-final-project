@@ -22,56 +22,106 @@ disease_df.head()
 
 ```
 
-# Converting Climate Data to Weekly Format
+# Cleaning
 
 ```{python}
-
+# Convert climate YEAR and DOY into dates
 climate_df["date"] = (
     pd.to_datetime(climate_df["YEAR"].astype(str) + "-01-01")
     + pd.to_timedelta(climate_df["DOY"] - 1, unit="D")
 )
-# Replace missing values
-cols = ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M"]
-climate_df[cols] = climate_df[cols].replace(-999, float("nan"))
 
-# Aggregate by week
-climate_weekly = (
-    climate_df
-    .set_index("date")
-    .resample("7D", origin="1986-01-01", label="left", closed="left")
-    .agg({
-        "T2M": "mean",
-        "T2M_MAX": "max",
-        "T2M_MIN": "min",
-        "PRECTOTCORR": "sum",
-        "RH2M": "mean"
-    })
-    .rename(columns={
-        "T2M": "temp_avg",
-        "T2M_MAX": "temp_max",
-        "T2M_MIN": "temp_min",
-        "PRECTOTCORR": "precip_total",
-        "RH2M": "humidity_avg"
-    })
-    .reset_index()
-    .rename(columns={"date": "weekdate"})
-)
-
-climate_weekly.head()
-
-```
-
-
-# Merge with Disease Data
-
-```{python}
+# Convert dengue dates
 disease_df["weekdate"] = pd.to_datetime(disease_df["weekdate"])
 
-all_data = disease_df.merge(
-    climate_weekly,
-    on="weekdate",
-    how="left"
+# Sort both datasets
+climate_df = climate_df.sort_values("date")
+disease_df = disease_df.sort_values("weekdate")
+
+# Replace NASA missing values
+cols = ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M"]
+
+climate_df[cols] = climate_df[cols].replace(-999, np.nan)
+
+climate_aligned = pd.merge_asof(
+    climate_df,
+    disease_df[["weekdate"]],
+    left_on="date",
+    right_on="weekdate",
+    direction="backward"
 )
 
-all_data.columns
+climate_weekly = (
+    climate_aligned
+    .groupby("weekdate")
+    .agg(
+        temp_avg=("T2M", "mean"),
+        temp_max=("T2M_MAX", "max"),
+        temp_min=("T2M_MIN", "min"),
+        precip_total=("PRECTOTCORR", lambda x: x.sum(min_count=1)),
+        humidity_avg=("RH2M", "mean")
+    )
+    .reset_index()
+)
+
+climate_weekly.isna().sum()
+climate_weekly.head()
+
+
 ```
+
+
+# Merge datasets
+
+```{python}
+full_df = disease_df.merge(
+    climate_weekly,
+    on="weekdate",
+    how="left",
+    validate="one_to_one"
+)
+
+full_df = full_df.sort_values("weekdate").reset_index(drop=True)
+
+full_df.head()
+
+
+```
+
+# Create lags, then remove 2024 data and check for remaining NA values
+
+```{python}
+
+
+for lag in [1, 2, 4, 8]:
+    full_df[f"cases_{lag}wk_later"] = full_df["conf_cases"].shift(-lag)
+
+full_df = full_df[full_df["year"] < 2024].reset_index(drop=True)
+
+full_df.isna().sum()
+
+full_df.head()
+
+
+```
+
+
+# Quick checks
+
+```{python}
+print(full_df.shape)
+print(full_df.isna().sum())
+print(full_df.tail(10))
+
+
+```
+
+
+# Save df as CSV to data/ folder
+
+```{python}
+full_df.to_csv("data/full_df.csv", index=False)
+
+```
+
+
