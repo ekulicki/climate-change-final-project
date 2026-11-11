@@ -1,8 +1,9 @@
 ---
 title: "Supervised Learning"
-format: html
+format: 
+    html:
+        embed-resources: true
 jupyter: dengue
-
 ---
 
 # Loading Data and Packages

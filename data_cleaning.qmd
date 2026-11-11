@@ -1,8 +1,9 @@
 ---
 title: "Data Cleaning"
-format: html
+format: 
+    html:
+        embed-resources: true
 jupyter: dengue
-
 ---
 
 

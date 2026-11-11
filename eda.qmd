@@ -1,8 +1,9 @@
 ---
 title: "EDA"
-format: html
+format: 
+    html:
+        embed-resources: true
 jupyter: dengue
-
 ---
 
 # Loading Data and Packages
